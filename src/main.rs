@@ -6,7 +6,7 @@ struct Swap {
     b: u32
 }
 
-trait Serialize {
+pub trait Serialize {
     fn serialize(&self) -> Vec<u8>;
 }
 
@@ -26,10 +26,13 @@ impl Deserialise for Swap {
           return Ok(Swap {
            a:a,
            b:b
-
           });
         }
     }
+}
+
+pub fn notify<T:Serialize>(item: &T){
+    println!("This is serialisation {:?}",item.serialize())
 }
 
 impl Serialize for Swap {
@@ -39,7 +42,6 @@ impl Serialize for Swap {
        v.extend_from_slice(&self.a.to_be_bytes());
        v.extend_from_slice(&self.b.to_be_bytes());
        return v;
-
     }
 }
 
@@ -50,6 +52,8 @@ fn main(){
     };
     let v = s.serialize();
     print!("{:?}",v);
+
+    notify(&s);
 
     let x = Swap::deserialise(&v).unwrap();
     print!("{:?}",x);
